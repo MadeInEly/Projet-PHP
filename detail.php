@@ -1,3 +1,12 @@
+<?php
+
+// fichier : session1.php
+
+// ! ! ! démarrage de la session, instruction a placer en tête de script ! ! ! 
+
+session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
