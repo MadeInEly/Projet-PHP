@@ -1,9 +1,10 @@
+
 <h2> Se connecter </h2>
-<form action="p_authentification.php" method = "post">
+<form action="connexion.php" method = "post">
 
-        Nom: <input name="nom" type="text" size ="30">
+        Identifiant: <input name="nom" type="text" size ="30">
 
-        Code: <input name="code" type="text" size ="30">
+        Mot de passe : <input name="code" type="text" size ="30">
 
         <input type="submit" name="btnSeConnecter"  value="Se connecter">
 

@@ -1,3 +1,5 @@
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,18 +13,14 @@
 <?php include ('entete.html');?>  <!-- Inclure le carouseul d'image --> 
 <br>
 <br>
+<div class="col-sm-9">
+<?php
+$auteur=$_GET["nmbr"];
+require_once('connexion_bibliodrive.php');
 
-    <div class="col-sm-3">
-        <img src="librairie.png" width="300px" height="350px">
-        <?php include ('authentification.php');?>   <!-- Inclure pour la connexion -->
-      </div>
-  </div>
-<?php 
-$auteur = $_POST["submit"];
-require_once('bibliotheque.php');
+$stmt = $connexion->prepare("SELECT nolivre, titre, anneeparution, auteur.nom, photo FROM livre INNER JOIN auteur ON (auteur.noauteur = livre.noauteur) WHERE nom like :auteur");
 
-$stmt = $connexion->prepare("SELECT * FROM utilisateur");
-
+$stmt->bindValue(":auteur", $auteur);
 $stmt->setFetchMode(PDO::FETCH_OBJ);
 
 // Les résultats retournés par la requête seront traités en 'mode' objet
@@ -33,16 +31,19 @@ $stmt->execute();
 
 // Parcours des enregistrements retournés par la requête : premier, deuxième…
 
-while($enregistrement = $stmt->fetch())
-
-{
-
-  // Affichage des champs nom et prenom de la table 'utilisateur'
-
-  echo '<h1>', $enregistrement->nom, ' ', $enregistrement->prenom,' ', $enregistrement->mot_de_passe,'</h1>';
-
+while ($enregistrement = $stmt->fetch())
+ {
+  echo "<a href='http://localhost/biblio/detail.php?numero=".$enregistrement->nolivre."'>", $enregistrement->titre, $enregistrement->anneeparution,"<br></a></h1>";
 }
-
+   
 ?>
+</div>
+    </div>
+    <div class="col-sm-3">
+        <img src="librairie.png" width="300px" height="350px">
+        <?php include ('authentification.php');?>   <!-- Inclure pour la connexion -->
+      </div>
+  </div>
 </body>
 </html>
+
