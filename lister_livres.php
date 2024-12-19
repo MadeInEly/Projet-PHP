@@ -1,5 +1,22 @@
-</body>
-</html>
+<?php
+// UC5 : Voir panier.
+// NE PAS OUBLIER DE FAIRE DEMARRAGE SESSION POUR LE 20/12 ¤¤¤¤¤¤¤¤¤¤
+
+// Démarrage de la session    //NE PAS REMETTRE SI AUTHENTIFICATION.PHP
+
+// session_start();
+
+// vérification si l'utilisateur est co
+
+//if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] !== true) {
+
+  //  echo '<div style="color: red;">Accès refusé. Veuillez vous connecter.</div>';
+
+//    exit;
+
+//}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +27,23 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<?php include ('entete.html');?>  <!-- Inclure le carouseul d'image --> 
+<?php include ('entete.html');?>
 <br>
 <br>
 <div class="col-sm-9">
 <?php
-$auteur=$_GET["nmbr"];
+if (!isset($_GET["nmbr"]) || empty($_GET["nmbr"])) {
+  echo '
+  <form method="get" action="' . $_SERVER['PHP_SELF'] . '">
+      <div class="mb-3">
+          <label for="nmbr" class="form-label">Rechercher un auteur :</label>
+          <input type="text" class="form-control" id="nmbr" name="nmbr" placeholder="Entrez le nom d\'un auteur">
+      </div>
+      <button type="submit" class="btn btn-primary">Rechercher</button>
+  </form>';
+}
+$auteur = $_GET["nmbr"];
+
 require_once('connexion_bibliodrive.php');
 
 $stmt = $connexion->prepare("SELECT nolivre, titre, anneeparution, auteur.nom, photo FROM livre INNER JOIN auteur ON (auteur.noauteur = livre.noauteur) WHERE nom like :auteur");
@@ -33,7 +61,7 @@ $stmt->execute();
 
 while ($enregistrement = $stmt->fetch())
  {
-  echo "<a href='http://localhost/biblio/detail.php?numero=".$enregistrement->nolivre."'>", $enregistrement->titre, $enregistrement->anneeparution,"<br></a></h1>";
+  echo "<a href='http://localhost/projet-php/detail.php?numero=".$enregistrement->nolivre."'>", $enregistrement->titre, $enregistrement->anneeparution,"<br></a></h1>";
 }
    
 ?>
