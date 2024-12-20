@@ -2,22 +2,20 @@
 <?php
 session_start();
 
-// Si le bouton "Se déconnecter" est cliqué
+// Se déconnecteré
 if (isset($_POST['btnSeDeconnecter'])) {
-    session_unset(); // Supprimer toutes les variables de session
-    session_destroy(); // Détruire la session
-    header("Location: " . $_SERVER['PHP_SELF']); // Redirection vers la page pour afficher le formulaire de connexion
-    exit; // Arrêter l'exécution ici
+    session_unset(); 
+    session_destroy();
+    header("Location: " . $_SERVER['PHP_SELF']); 
+    exit;
 }
 
-// Si l'utilisateur est déjà connecté
 if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
     echo '<h1>Bienvenue, vous êtes déjà connecté !</h1>';
     echo '
     <form action="' . $_SERVER['PHP_SELF'] . '" method="post">
         <input type="submit" name="btnSeDeconnecter" value="Se déconnecter">
     </form>';
-    exit; // Arrêter l'exécution ici pour ne pas afficher le formulaire de connexion
 }
 
 // Si le formulaire de connexion est soumis
@@ -58,11 +56,12 @@ if (!isset($_POST['btnSeConnecter'])) {
             echo '<div style="color: red;">Échec à la connexion. Identifiant ou mot de passe incorrect.</div>';
             echo '
             <form action="' . $_SERVER['PHP_SELF'] . '" method="post">
-                Identifiant : <input name="mel" type="text" size="30" required>
-                Mot de passe : <input name="mot_de_passe" type="password" size="30" required>
+                Identifiant : <input name="mel" type="text" size="30" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                Mot de passe : <input name="mot_de_passe" type="password" size="30" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
                 <input type="submit" name="btnSeConnecter" value="Se connecter">
             </form>';
         }
+
     } catch (PDOException $e) {
         echo '<div style="color: red;">Erreur : ' . $e->getMessage() . '</div>';
     }

@@ -11,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<?php include ('entete.html');?>  <!-- Inclure le carouseul d'image --> 
+<?php include ('entete.php');?>  <!-- Inclure le carouseul d'image --> 
 <br>
 <br>
 <div class="col-sm-9">

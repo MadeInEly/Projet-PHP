@@ -1,4 +1,10 @@
 <?php
+
+// Démarrage de la session, instruction a placer en tête de script
+
+session_start();
+
+
 // UC5 : Voir panier.
 // NE PAS OUBLIER DE FAIRE DEMARRAGE SESSION POUR LE 20/12 ¤¤¤¤¤¤¤¤¤¤
 
@@ -27,22 +33,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<?php include ('entete.html');?>
+<?php include ('entete.php');?>
 <br>
 <br>
 <div class="col-sm-9">
 <?php
-if (!isset($_GET["nmbr"]) || empty($_GET["nmbr"])) {
-  echo '
-  <form method="get" action="' . $_SERVER['PHP_SELF'] . '">
-      <div class="mb-3">
-          <label for="nmbr" class="form-label">Rechercher un auteur :</label>
-          <input type="text" class="form-control" id="nmbr" name="nmbr" placeholder="Entrez le nom d\'un auteur">
-      </div>
-      <button type="submit" class="btn btn-primary">Rechercher</button>
-  </form>';
-}
-$auteur = $_GET["nmbr"];
+
 
 require_once('connexion_bibliodrive.php');
 
@@ -63,6 +59,8 @@ while ($enregistrement = $stmt->fetch())
  {
   echo "<a href='http://localhost/projet-php/detail.php?numero=".$enregistrement->nolivre."'>", $enregistrement->titre, $enregistrement->anneeparution,"<br></a></h1>";
 }
+
+
    
 ?>
 </div>
