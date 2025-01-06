@@ -1,3 +1,7 @@
+<?php
+// Démarrage de la session
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +12,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<?php include ('entete.php');?>  <!-- Inclure l'entete --> 
+<?php
+if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
+    include('enteteadmin.php'); // Inclure entête pour les admin
+} else {
+    include('entete.php'); // Inclure l'entête normal pour le reste
+}
+?>
+
 <br>
 <br>
 <div class="text-center">

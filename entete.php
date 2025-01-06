@@ -16,21 +16,24 @@
   <form action="lister_livres.php" method="GET">
 
   <?php
-if (!isset($_GET["nmbr"]) || empty($_GET["nmbr"])) {
-  echo '
-  <form method="get" action="' . $_SERVER['PHP_SELF'] . '">
-      <div class="mb-3">
-          <input type="text" class="form-control" id="nmbr" name="nmbr" placeholder="Rechercher dans le catalogue (saisie nom de l\'auteur)">
-      </div>
-      <button type="submit" class="btn btn-primary">Rechercher</button>
-      <button type="submit" class="btn btn-primary">Panier</button>
-  </form>';
+$auteur = isset($_GET['nmbr']) ? $_GET['nmbr'] : '';
+
+if (empty($auteur)) {
+    echo "<p>Saisir le nom d'un auteur dans la barre de recherche.</p>";
 }
-$auteur = $_GET["nmbr"];
 ?>
+<form method="get" action="lister_livres.php">
+    <div class="mb-3">
+        <input type="text" class="form-control" id="nmbr" name="nmbr" placeholder="Rechercher dans le catalogue (saisie nom de l'auteur)" value="
+        <?php 
+          echo htmlspecialchars($auteur); 
+        ?>
+    ">
+    </div>
+    <button type="submit" class="btn btn-primary">Rechercher</button>
+    <a href="panier.php" class="btn btn-primary">Panier</a>
+</form>
 
 </form>
 </body>
 </html>
-
-

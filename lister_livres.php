@@ -8,7 +8,7 @@ session_start();
 // UC5 : Voir panier.
 // NE PAS OUBLIER DE FAIRE DEMARRAGE SESSION POUR LE 20/12 ¤¤¤¤¤¤¤¤¤¤
 
-// Démarrage de la session    //NE PAS REMETTRE SI AUTHENTIFICATION.PHP
+// Démarrage de la session
 
 // session_start();
 
@@ -42,6 +42,9 @@ session_start();
 
 require_once('connexion_bibliodrive.php');
 
+$auteur = isset($_GET['nmbr']) ? '%' . $_GET['nmbr'] . '%' : '%';
+
+
 $stmt = $connexion->prepare("SELECT nolivre, titre, anneeparution, auteur.nom, photo FROM livre INNER JOIN auteur ON (auteur.noauteur = livre.noauteur) WHERE nom like :auteur");
 
 $stmt->bindValue(":auteur", $auteur);
@@ -53,7 +56,7 @@ $stmt->execute();
 
  
 
-// Parcours des enregistrements retournés par la requête : premier, deuxième…
+
 
 while ($enregistrement = $stmt->fetch())
  {
@@ -72,4 +75,3 @@ while ($enregistrement = $stmt->fetch())
   </div>
 </body>
 </html>
-
