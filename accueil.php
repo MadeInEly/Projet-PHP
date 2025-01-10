@@ -5,7 +5,7 @@ session_start();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Biblioteque</title>
+  <title>Bibliotheque</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,10 +13,10 @@ session_start();
 </head>
 <body>
 <?php
-if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
-    include('enteteadmin.php'); // Inclure entête pour les admin
+if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') { // si utilisateur = admin
+    include('enteteadmin.php'); // nnclure entête pour les admin
 } else {
-    include('entete.php'); // Inclure l'entête normal pour le reste
+    include('entete.php'); // inclure l'entête normal pour le reste
 }
 ?>
 

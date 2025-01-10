@@ -18,7 +18,7 @@ echo '<div id="demo" class="carousel slide" data-bs-ride="carousel">
   
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">';
-  $x = 0;
+  $x = 0; // init la variable 
     while ($enregistement = $stmt->fetch() ) {
     if ( $x == 0 ) {
             echo '<div class="carousel-item active">

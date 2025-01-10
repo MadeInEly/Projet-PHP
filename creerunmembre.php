@@ -1,110 +1,123 @@
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <title>Biblioteque</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<title>Bibliotheque</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <?php
+            <div class="col-sm-9 order-sm-1">
+<?php
+if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
+    include('enteteadmin.php'); // Inclure entête pour les admin
+} else {
+    include('entete.php'); // Inclure l'entête normal pour le reste
+}
+?>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9">
+            <h2 class="text-center">Créer un utilisateur</h2>
 
-        
-        if(!$_SESSION["adminUser"] || !isset($_SESSION["adminUser"])) {
-            echo "Accès non autorisé."; // Refuse l'accès un utilisateur normal pas admin
-            exit;
-        }
-        require("utilitaires/authentification.php");
+            <form action="cree_membre.php" method="POST" class="p-3 border border-2">
+                <div class="mb-3 row">
+                    <label for="mel" class="form-label col-sm-2 col-form-label">Mail</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="mel" name="mel" required>
+                    </div>
+                </div>
 
-        if(isset($_POST["noauteur"])){
+                <div class="mb-3 row">
+                    <label for="motdepasse" class="form-label col-sm-2 col-form-label">Mot de Passe</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="motdepasse" name="motdepasse" required>
+                    </div>
+                </div>
 
-            $noauteur = $_POST["noauteur"];
-            $titre = $_POST["titre"];
-            $ISBN13 = $_POST["ISBN13"];
-            $annee_parution = $_POST["annee_parution"];
-            $resume = $_POST["resume"];
-            $cover = $_FILES["cover"];
+                <div class="mb-3 row">
+                    <label for="nom" class="form-label col-sm-2 col-form-label">Nom</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="nom" name="nom" required>
+                    </div>
+                </div>
 
-           try {
+                <div class="mb-3 row">
+                    <label for="prenom" class="form-label col-sm-2 col-form-label">Prénom</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="prenom" name="prenom" required>
+                    </div>
+                </div>
 
-                $req = $connexion->prepare("
-                INSERT INTO 
-                livre(noauteur, titre, isbn13, anneeparution, resume, dateajout, image) 
-                VALUES(:noauteur, :titre, :ISBN13, :annee_parution, :resume, :dateajout, :cover)
-                ");
+                <div class="mb-3 row">
+                    <label for="adresse" class="form-label col-sm-2 col-form-label">Adresse</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="adresse" name="adresse" required>
+                    </div>
+                </div>
 
-                $req->bindValue(":noauteur", $noauteur, PDO::PARAM_INT);
-                $req->bindValue(":titre", $titre);
-                $req->bindValue(":ISBN13", $ISBN13);
-                $req->bindValue(":annee_parution", $annee_parution);
-                $req->bindValue(":resume", $resume);
-                $req->bindValue(":dateajout", date("Y-m-d"));
-                $req->bindValue(":cover", $cover['name']);
+                <div class="mb-3 row">
+                    <label for="ville" class="form-label col-sm-2 col-form-label">Ville</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="ville" name="ville" required>
+                    </div>
+                </div>
 
-                $req->execute();
-                $book_added = TRUE;
+                <div class="mb-3 row">
+                    <label for="codepostal" class="form-label col-sm-2 col-form-label">Code Postal</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="codepostal" name="codepostal" required>
+                    </div>
+                </div>
 
-                move_uploaded_file($cover['tmp_name'], "images/covers/".$cover['name']); // Ajouter la cover dans le dossier cover de images pour l'afficher sur le site.
+                <button type="submit" class="btn btn-primary mx-auto d-block">Créer l'utilisateur</button>
+            </form>
 
-           } catch(Exception $e) {
-                $erreur = $e;
-                $book_added = FALSE;
-           }
-            
-            
-        }
-
-    ?>
-        
-        <h1 class="big-title">Ajouter un livre</h1>
-
-        <form method="post" class="form-admin" enctype="multipart/form-data">
-            <label for="auteur">Auteur : </label>
             <?php
-                    echo "<select name=\"noauteur\" id=\"auteur\" required>";
-                    echo "<option value=\"\" disabled selected>---- Sélectionner ----</option>";
-                    $req = $connexion->query("SELECT noauteur,nom FROM auteur");
-                    $req->setFetchMode(PDO::FETCH_OBJ);
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (isset($_POST['mel'], $_POST['motdepasse'], $_POST['nom'], $_POST['prenom'], $_POST['adresse'], $_POST['ville'], $_POST['codepostal'])) {
+                    $mel = $_POST['mel'];
+                    $motdepasse = md5($_POST['motdepasse']); // Cryptage du mot de passe
+                    $nom = $_POST['nom'];
+                    $prenom = $_POST['prenom'];
+                    $adresse = $_POST['adresse'];
+                    $ville = $_POST['ville'];
+                    $codepostal = $_POST['codepostal'];
 
-                    while($auteur = $req->fetch()){
-                        echo "<option value=\"{$auteur->noauteur}\">{$auteur->nom}</option>";
+                    try {
+                        // Requête pour insérer les données dans la table utilisateur
+                        $sql = "INSERT INTO utilisateur (mel, motdepasse, nom, prenom, adresse, ville, codepostal) 
+                                VALUES (:mel, :motdepasse, :nom, :prenom, :adresse, :ville, :codepostal)";
+                        $stmt = $connexion->prepare($sql);
+                        $stmt->bindParam(':mel', $mel, PDO::PARAM_STR);
+                        $stmt->bindParam(':motdepasse', $motdepasse, PDO::PARAM_STR);
+                        $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+                        $stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+                        $stmt->bindParam(':adresse', $adresse, PDO::PARAM_STR);
+                        $stmt->bindParam(':ville', $ville, PDO::PARAM_STR);
+                        $stmt->bindParam(':codepostal', $codepostal, PDO::PARAM_STR);
+                        $stmt->execute();
+
+                        echo "<div class='alert alert-success text-center mt-3'>L'utilisateur a bien été créé !</div>";
+                    } catch (PDOException $e) {
+                        //erreur sans msg
                     }
-
-                    echo "</select>";
-                
-            ?>
-
-            <label for="titre">Titre : </label>
-            <input type="text" name="titre" id="titre" autocomplete="off" required>
-            
-            <label for="ISBN13">ISBN13 :</label>
-            <input type="text" name="ISBN13" id="ISBN13" autocomplete="off" required>
-            
-            <label for="annee_parution">Année de parution : </label>
-            <input type="text" name="annee_parution" id="annee_parution" autocomplete="off" required>
-            
-            <label for="resume">Résumé : </label>
-            <textarea name="resume" id="resume" autocomplete="off" rows="7" required></textarea>     
-
-            <label for="cover">Image : </label>
-            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" autocomplete="off" required/>
-
-            <input type="submit" value="Ajouter le livre" class="button-general">
-            
-            <?php 
-            
-                if(isset($book_added)) {
-                    if ($book_added) 
-                        echo '<p class="ajout_succes">Livre ajouté avec succès !</p>';
-                    else
-                        echo '<p class="ajout_erreur">Une erreur est survenue l\'or de l\'ajout du livre : '. $erreur . '</p>';
                 }
+            }
             ?>
-    <div class="col-sm-3">
-    <img src="librairie.png" width="300px" height="350px">
-    <?php include('authentification.php'); ?> <!-- Inclure pour la connexion -->
-  </div>
+        </div>
+
+        <div class="col-sm-3">
+        <img src="librairie.png" width="300px" height="350px">
+        <?php include ('authentification.php');?>   <!-- Inclure pour la connexion -->
+      </div>
+    </div>
+</div>
+
 </body>
 </html>

@@ -1,110 +1,105 @@
+
+<?php session_start();
+//$stmt = $connexion->prepare("SELECT noauteur, nom, prenom FROM auteur"); // Prépare la requête
+//$stmt->setFetchMode(PDO::FETCH_OBJ); // prendre le resultat pour un objet
+//$stmt->execute();
+//$auteurs = $stmt->fetchAll();
+?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <title>Biblioteque</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<title>Bibliothèque</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <?php
-        session_start();
+<div class="col-sm-9">
+<?php
+if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
+    include('enteteadmin.php'); // Inclure entête pour les admin
+} else {
+    include('entete.php'); // Inclure l'entête normal pour le reste
+}
 
-        
-        if(!$_SESSION["adminUser"] || !isset($_SESSION["adminUser"])) {
-            echo "Accès non autorisé."; // Refuse l'accès un utilisateur normal pas admin
-            exit;
-        }
-        require("utilitaires/authentification.php");
 
-        if(isset($_POST["noauteur"])){
+?>
 
-            $noauteur = $_POST["noauteur"];
-            $titre = $_POST["titre"];
-            $ISBN13 = $_POST["ISBN13"];
-            $annee_parution = $_POST["annee_parution"];
-            $resume = $_POST["resume"];
-            $cover = $_FILES["cover"];
-
-           try {
-
-                $req = $connexion->prepare("
-                INSERT INTO 
-                livre(noauteur, titre, isbn13, anneeparution, resume, dateajout, image) 
-                VALUES(:noauteur, :titre, :ISBN13, :annee_parution, :resume, :dateajout, :cover)
-                ");
-
-                $req->bindValue(":noauteur", $noauteur, PDO::PARAM_INT);
-                $req->bindValue(":titre", $titre);
-                $req->bindValue(":ISBN13", $ISBN13);
-                $req->bindValue(":annee_parution", $annee_parution);
-                $req->bindValue(":resume", $resume);
-                $req->bindValue(":dateajout", date("Y-m-d"));
-                $req->bindValue(":cover", $cover['name']);
-
-                $req->execute();
-                $book_added = TRUE;
-
-                move_uploaded_file($cover['tmp_name'], "images/covers/".$cover['name']); // Ajouter la cover dans le dossier cover de images pour l'afficher sur le site.
-
-           } catch(Exception $e) {
-                $erreur = $e;
-                $book_added = FALSE;
-           }
-            
-            
-        }
-
-    ?>
-        
-        <h1 class="big-title">Ajouter un livre</h1>
-
-        <form method="post" class="form-admin" enctype="multipart/form-data">
-            <label for="auteur">Auteur : </label>
-            <?php
-                    echo "<select name=\"noauteur\" id=\"auteur\" required>";
-                    echo "<option value=\"\" disabled selected>---- Sélectionner ----</option>";
-                    $req = $connexion->query("SELECT noauteur,nom FROM auteur");
-                    $req->setFetchMode(PDO::FETCH_OBJ);
-
-                    while($auteur = $req->fetch()){
-                        echo "<option value=\"{$auteur->noauteur}\">{$auteur->nom}</option>";
-                    }
-
-                    echo "</select>";
+<div class="container-fluid"> <!-- Pour bien ranger  -->  
+    <div class="row">
+        <div class="col-md-9">
+            <h2 class="text-center" style="color: purple">Ajouter un livre</h2>
+            <form  method="POST" class="p-3 border border-2">
                 
-            ?>
+                <div class="mb-3 row">
+                    <label for="titre" class="form-label col-sm-2 col-form-label">Titre :</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="titre" name="titre" required>
+                    </div>
+                </div>
 
-            <label for="titre">Titre : </label>
-            <input type="text" name="titre" id="titre" autocomplete="off" required>
-            
-            <label for="ISBN13">ISBN13 :</label>
-            <input type="text" name="ISBN13" id="ISBN13" autocomplete="off" required>
-            
-            <label for="annee_parution">Année de parution : </label>
-            <input type="text" name="annee_parution" id="annee_parution" autocomplete="off" required>
-            
-            <label for="resume">Résumé : </label>
-            <textarea name="resume" id="resume" autocomplete="off" rows="7" required></textarea>     
+                <div class="mb-3 row">
+                    <label for="isbn" class="form-label col-sm-2 col-form-label">ISBN13 :</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="isbn" name="isbn" required>
+                    </div>
+                </div>
 
-            <label for="cover">Image : </label>
-            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" autocomplete="off" required/>
+                <div class="mb-3 row">
+                    <label for="annee" class="form-label col-sm-2 col-form-label">Année de production :</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="annee" name="annee" required>
+                    </div>
+                </div>
 
-            <input type="submit" value="Ajouter le livre" class="button-general">
-            
-            <?php 
-            
-                if(isset($book_added)) {
-                    if ($book_added) 
-                        echo '<p class="ajout_succes">Livre ajouté avec succès !</p>';
-                    else
-                        echo '<p class="ajout_erreur">Une erreur est survenue l\'or de l\'ajout du livre : '. $erreur . '</p>';
-                }
-            ?>
-    <div class="col-sm-3">
-    <img src="librairie.png" width="300px" height="350px">
-    <?php include('authentification.php'); ?> <!-- Inclure pour la connexion -->
-  </div>
+                <div class="mb-3 row">
+                    <label for="resume" class="form-label col-sm-2 col-form-label">Résumé :</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="resume" name="resume" required></textarea>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="image" class="form-label col-sm-2 col-form-label">Image :</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="image"  name="image" required>
+                    </div>
+                </div>
+
+                <!-- menu qui déroule avec les auteurs -->
+                <div class="mb-3 row">
+                    <label for="auteur" class="form-label col-sm-2 col-form-label">Auteur :</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" id="auteur" name="auteur" required>
+                        <?php
+require_once 'connexion.php'; // Inclure la connexion bd
+try {
+    $stmt = $connexion->prepare("SELECT noauteur, nom, prenom FROM auteur"); // Prépare la requête
+    $stmt->execute(); // va executer le truc au dessus
+    $auteurs = $stmt->fetchAll(PDO::FETCH_OBJ); // Récupère tt les résult
+    foreach ($auteurs as $auteur) { // pour que mon code regarde tt les auteurs dans la base de donnees
+        echo "<option value='{$auteur->noauteur}'>{$auteur->prenom} {$auteur->nom}</option>"; // je vais afficher le nom le prenom et le num de l'auteur
+    }
+} catch (PDOException $e) { // si ya une erreur je vais afficher la ligne en dessous
+    echo "<option style='color:red;' disabled>Impossible de charger les auteurs</option>";
+}
+?>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mx-auto d-block">Ajouter livre</button>
+            </form>
+        </div>
+
+        <div class="col-sm-3">
+            <img src="librairie.png" width="300px" height="350px">
+            <?php include ('authentification.php'); ?> <!-- Inclure pour la connexion -->
+        </div>
+    </div>
+</div>
 </body>
 </html>

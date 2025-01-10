@@ -1,8 +1,7 @@
 <?php
-
-// Démarrage de la session, instruction a placer en tête de script
-
+// Démarrage de la session
 session_start();
+
 
 
 // UC5 : Voir panier.
@@ -26,7 +25,7 @@ session_start();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Biblioteque</title>
+  <title>Bibliotheque</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -58,9 +57,10 @@ $stmt->execute();
 
 
 
-while ($enregistrement = $stmt->fetch())
- {
-  echo "<a href='http://localhost/projet-php/detail.php?numero=".$enregistrement->nolivre."'>", $enregistrement->titre, $enregistrement->anneeparution,"<br></a></h1>";
+while ($enregistrement = $stmt->fetch()) {
+  echo "<a href='http://localhost/projet-php/detail.php?numero=" . $enregistrement->nolivre . "'>" . 
+       $enregistrement->titre . " - " . $enregistrement->anneeparution . 
+       "<br></a>";
 }
 
 

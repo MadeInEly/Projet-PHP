@@ -27,29 +27,29 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
     require_once('connexion.php');
 
     // Récupérer les détails du livre
-    $stmt = $connexion->prepare("SELECT prenom, nom, l.isbn13, l.detail, l.photo, l.disponible FROM auteur a INNER JOIN livre l ON (a.noauteur = l.noauteur) WHERE nolivre = :numero"); 
-    $stmt->bindValue(":numero", $numero);
-    $stmt->setFetchMode(PDO::FETCH_OBJ);
-    $stmt->execute();
+    $stmt = $connexion->prepare("SELECT prenom, nom, l.isbn13, l.detail, l.photo, l.disponible FROM auteur a INNER JOIN livre l ON (a.noauteur = l.noauteur) WHERE nolivre = :numero");
+$stmt->bindValue(":numero", $numero);
+$stmt->setFetchMode(PDO::FETCH_OBJ);
+$stmt->execute();
 
-    while ($enregistrement = $stmt->fetch()) {
-        echo '<h3>' . htmlspecialchars($enregistrement->prenom) . ' ' . htmlspecialchars($enregistrement->nom) . '</h3>';
-        echo '<p>ISBN13 : ' . htmlspecialchars($enregistrement->isbn13) . '</p>';
-        echo '<h4>Résumé du livre</h4>';
-        echo '<p>' . htmlspecialchars($enregistrement->detail) . '</p>';
+while ($enregistrement = $stmt->fetch()) {
+    echo '<h3>' . htmlspecialchars($enregistrement->prenom) . ' ' . htmlspecialchars($enregistrement->nom) . '</h3>';
+    echo '<p>ISBN13 : ' . htmlspecialchars($enregistrement->isbn13) . '</p>';
+    echo '<h4>Résumé du livre</h4>';
+    echo '<p>' . htmlspecialchars($enregistrement->detail) . '</p>';
 
-        if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
-            // Indiquer la disponibilité
-            if ($enregistrement->disponible) {
-                echo '<p style="color: green;">Disponible</p>';
-                echo '<a href="detail.php?numero=' . $numero . '&action=emprunter" class="btn btn-primary">Emprunter</a>';
-            } else {
-                echo '<p style="color: red;">Indisponible</p>';
-            }
+    if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
+        if ($enregistrement->disponible) {
+            echo '<p style="color: green;">Disponible</p>';
+            echo '<a href="detail.php?numero=' . $numero . '&action=emprunter" class="btn btn-primary">Emprunter</a>';
         } else {
-            echo '<p>Connectez-vous pour voir la disponibilité.</p>';
+            echo '<p style="color: red;">Indisponible</p>';
         }
+    } else {
+        echo '<p>Connectez-vous pour voir la disponibilité.</p>';
     }
+}
+
 
     //  clic pour emprunter
     if (isset($_GET['action']) && $_GET['action'] === 'emprunter') {
