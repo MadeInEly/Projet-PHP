@@ -1,7 +1,8 @@
-<?php session_start(); ?>
+<?php session_start();
+require_once 'connexion.php';
+?>
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
 <title>Bibliotheque</title>
 
@@ -25,7 +26,7 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
         <div class="col-md-9">
             <h2 class="text-center">Créer un utilisateur</h2>
 
-            <form action="cree_membre.php" method="POST" class="p-3 border border-2">
+            <form action="creerunmembre.php" method="POST" class="p-3 border border-2">
                 <div class="mb-3 row">
                     <label for="mel" class="form-label col-sm-2 col-form-label">Mail</label>
                     <div class="col-sm-10">
@@ -79,7 +80,7 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
             </form>
 
             <?php
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once 'connexion.php';
                 if (isset($_POST['mel'], $_POST['motdepasse'], $_POST['nom'], $_POST['prenom'], $_POST['adresse'], $_POST['ville'], $_POST['codepostal'])) {
                     $mel = $_POST['mel'];
                     $motdepasse = md5($_POST['motdepasse']); // Cryptage du mot de passe
@@ -88,6 +89,7 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
                     $adresse = $_POST['adresse'];
                     $ville = $_POST['ville'];
                     $codepostal = $_POST['codepostal'];
+                    $profil = 'client';
 
                     try {
                         // Requête pour insérer les données dans la table utilisateur
@@ -101,6 +103,7 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
                         $stmt->bindParam(':adresse', $adresse, PDO::PARAM_STR);
                         $stmt->bindParam(':ville', $ville, PDO::PARAM_STR);
                         $stmt->bindParam(':codepostal', $codepostal, PDO::PARAM_STR);
+                        $stmt->bindParam(':profil', $profil, PDO::PARAM_STR);
                         $stmt->execute();
 
                         echo "<div class='alert alert-success text-center mt-3'>L'utilisateur a bien été créé !</div>";
@@ -108,7 +111,6 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
                         //erreur sans msg
                     }
                 }
-            }
             ?>
         </div>
 

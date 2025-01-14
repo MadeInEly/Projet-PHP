@@ -81,8 +81,8 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
                     $_SESSION['panier'] = array_values($_SESSION['panier']); // Réindexer le tableau
                     echo '<div class="alert alert-success mt-3">Livre supprimé du panier.</div>';
                 }
-                // Recharger la page pour refléter les changements
-                echo '<script>location.reload();</script>';
+                header('Location: panier.php');
+    exit;
             }
             ?>
         </div>

@@ -34,8 +34,8 @@ if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
         require_once 'connexion.php'; // Inclut le fichier de connexion à la base de données
 
         // Récupération et validation des données envoyées par le formulaire
-        $mel = trim($_POST['mel']); // Supprime les espaces inutiles
-        $mot_de_passe = trim($_POST['mot_de_passe']);
+        $mel = $_POST['mel']; // Supprime les espaces inutiles
+        $mot_de_passe = $_POST['mot_de_passe'];
 
         if (!empty($mel) && !empty($mot_de_passe)) {
             try {
@@ -74,10 +74,10 @@ if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
     // Affichage du formulaire de connexion
     echo '
     <form action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" method="post">
-        <label for="mel">Identifiant :</label>
-        <input name="mel" id="mel" type="text" size="30" required><br>
+        <label for="mel" Identifiant :</label>
+        <input name="mel" id="mel" type="text" size="30"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"required>  *  <br>
         <label for="mot_de_passe">Mot de passe :</label>
-        <input name="mot_de_passe" id="mot_de_passe" type="password" size="30" required><br>
+        <input name="mot_de_passe" id="mot_de_passe" type="password" size="30"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>  *<br>
         <input type="submit" name="btnSeConnecter" value="Se connecter">
     </form>';
 }

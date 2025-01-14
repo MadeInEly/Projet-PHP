@@ -28,6 +28,7 @@ $auteur = isset($_GET['nmbr']) ? $_GET['nmbr'] : '';
     </div>
     <a href="ajouterunlivre.php" class="btn btn-primary">Ajouter un livre</a>
     <a href="creerunmembre.php" class="btn btn-primary">Créer un membre</a>
+    <a href="panier.php" class="btn btn-primary">Panier</a>
 </form>
 
 </form>

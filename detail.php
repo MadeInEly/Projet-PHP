@@ -62,7 +62,7 @@ while ($enregistrement = $stmt->fetch()) {
             $_SESSION['panier'][] = $numero;
             echo '<div class="alert alert-success mt-3">Livre ajouté !</div>';
         } else {
-            echo '<div class="alert alert-warning mt-3">le livre déjà dans ton panier</div>';
+            echo '<div class="alert alert-warning mt-3">le livre maintenant dans votre panier</div>';
         }
     }
     ?>

@@ -27,7 +27,8 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
 
 
 ?>
-
+<br>
+<br>
 <div class="container-fluid"> <!-- Pour bien ranger  -->  
     <div class="row">
         <div class="col-md-9">
@@ -65,9 +66,11 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
                 <div class="mb-3 row">
                     <label for="image" class="form-label col-sm-2 col-form-label">Image :</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="image"  name="image" required>
+                        <input type="file" class="form-control" id="image"  name="image" accept="covers/*" required>
                     </div>
                 </div>
+
+
 
                 <!-- menu qui déroule avec les auteurs -->
                 <div class="mb-3 row">
@@ -76,6 +79,11 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
                         <select class="form-select" id="auteur" name="auteur" required>
                         <?php
 require_once 'connexion.php'; // Inclure la connexion bd
+$photo = $_FILES['photo']['name'];
+$photo_tmp = $_FILES['photo']['tmp_name'];
+$photo_path = 'covers/' . $photo;
+move_uploaded_file($photo_tmp, $photo_path);
+
 try {
     $stmt = $connexion->prepare("SELECT noauteur, nom, prenom FROM auteur"); // Prépare la requête
     $stmt->execute(); // va executer le truc au dessus
@@ -84,7 +92,7 @@ try {
         echo "<option value='{$auteur->noauteur}'>{$auteur->prenom} {$auteur->nom}</option>"; // je vais afficher le nom le prenom et le num de l'auteur
     }
 } catch (PDOException $e) { // si ya une erreur je vais afficher la ligne en dessous
-    echo "<option style='color:red;' disabled>Impossible de charger les auteurs</option>";
+    echo "<option style='color:red;' disabled>impossible de charger les auteurs</option>";
 }
 ?>
                         </select>
