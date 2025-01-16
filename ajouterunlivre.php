@@ -5,9 +5,11 @@
 //$stmt->execute();
 //$auteurs = $stmt->fetchAll();
 ?>
+<?php
+if (!isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
+?>
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
 <title>Bibliothèque</title>
 <meta charset="utf-8">
@@ -102,12 +104,15 @@ try {
                 <button type="submit" class="btn btn-primary mx-auto d-block">Ajouter livre</button>
             </form>
         </div>
-
         <div class="col-sm-3">
             <img src="librairie.png" width="300px" height="350px">
             <?php include ('authentification.php'); ?> <!-- Inclure pour la connexion -->
         </div>
     </div>
 </div>
+<?php
+} else { 
+    echo "<h2>Accès non autorisé !!!</h2>";
+ } ?>
 </body>
 </html>

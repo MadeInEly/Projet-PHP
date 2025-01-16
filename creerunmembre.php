@@ -1,6 +1,9 @@
 <?php session_start();
 require_once 'connexion.php';
 ?>
+<?php
+if (!isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -120,6 +123,9 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
       </div>
     </div>
 </div>
-
+<?php
+} else { 
+    echo "<h2>Accès non autorisé !!!</h2>";
+ } ?>
 </body>
 </html>
