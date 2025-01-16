@@ -58,7 +58,7 @@ if (isset($_SESSION['profil'])) {
             
                 echo "<li class='list-group-item d-flex justify-content-between align-items-center'>";
                 echo $auteur . " - " . ($livre['titre']);
-                echo "<a href='panier.php?annuler=" . ($nolivre) . "' class='btn btn-danger btn-sm'>Annuler</a>";
+                echo "<a href='panier.php?annuler=" . ($nolivre) . "' class='btn btn-danger name="supprimer_du_panier" btn-sm'>Annuler</a>";
                 echo "</li>";
             }
             
@@ -74,7 +74,19 @@ if (isset($_SESSION['profil'])) {
     echo "</div>";
 } else {
     echo "<p class='text-danger'>Connecter vous pour voir votre panier.</p>";
-}   ?>
+}  
+ // Suppression d'un livre du panier
+            if (isset($_POST['supprimer_du_panier'])) {
+                if (($key = array_search($article_id, $_SESSION['panier'])) !== false) {
+                    unset($_SESSION['panier'][$key]);
+                    $_SESSION['panier'] = array_values($_SESSION['panier']); // rafraichir le panier
+                    echo '<div class="alert alert-success mt-3">Livre supprimé du panier.</div>';
+                }
+                // recharge la page
+                echo '<script>location.reload();</script>';
+                header('Location: panier.php');
+    exit;
+} ?>
 </div>
 
     <!-- Colonne de droite -->
