@@ -26,7 +26,7 @@ if (empty($auteur)) {
     <div class="mb-3">
         <input type="text" class="form-control" id="nmbr" name="nmbr" placeholder="Rechercher dans le catalogue (saisie nom de l'auteur)" value="
         <?php 
-          echo htmlspecialchars($auteur); 
+          echo $auteur; 
         ?>
     ">
     </div>

@@ -33,10 +33,10 @@ $stmt->setFetchMode(PDO::FETCH_OBJ);
 $stmt->execute();
 
 while ($enregistrement = $stmt->fetch()) {
-    echo '<h3>' . htmlspecialchars($enregistrement->prenom) . ' ' . htmlspecialchars($enregistrement->nom) . '</h3>';
-    echo '<p>ISBN13 : ' . htmlspecialchars($enregistrement->isbn13) . '</p>';
+    echo '<h3>' . $enregistrement->prenom . ' ' . $enregistrement->nom . '</h3>';
+    echo '<p>ISBN13 : ' . $enregistrement->isbn13 . '</p>';
     echo '<h4>Résumé du livre</h4>';
-    echo '<p>' . htmlspecialchars($enregistrement->detail) . '</p>';
+    echo '<p>' . $enregistrement->detail . '</p>';
 
     if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
         if ($enregistrement->disponible) {
@@ -74,7 +74,7 @@ while ($enregistrement = $stmt->fetch()) {
     $stmt->execute();
 
     while ($enregistrement = $stmt->fetch()) {
-        echo '<img src="covers/' . htmlspecialchars($enregistrement->photo) . '" alt="Image livre" class="img-fluid">';
+        echo '<img src="covers/' . $enregistrement->photo . '" alt="Image livre" class="img-fluid">';
     }
     ?>
   </div>

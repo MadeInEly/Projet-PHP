@@ -16,7 +16,7 @@ require_once 'connexion.php';
 </head>
 <body>
 
-<div class="container mt-4">
+<div class="col-sm-9">
     
     <div class="row">
         <?php
@@ -25,73 +25,63 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] === 'admin') {
 } else {
     include('entete.php'); // Inclure l'en-tête normal
 }
-?>
-<h1 class="mb-4">Votre Panier</h1>
-        <!-- Colonne de gauche (col-sm-9) -->
-        <div class="col-sm-9 order-sm-1">
-            <?php
-            // Vérifier si le panier existe et contient des livres
-            if (isset($_SESSION['panier']) && !empty($_SESSION['panier'])) {
-                // Préparer une requête pour récupérer les détails des livres dans le panier
-                $placeholders = implode(',', array_fill(0, count($_SESSION['panier']), '?'));
+if (isset($_SESSION['profil'])) {
+    // Vérification des emprunt en cours et du nombre de livres restant a emprunter
+    $sqlEmpruntsEnCours = "SELECT COUNT(*) FROM emprunter WHERE mel = :email AND dateretour IS NULL";
+    $stmtEmpruntsEnCours = $connexion->prepare($sqlEmpruntsEnCours);
+    $stmtEmpruntsEnCours->bindParam(':email', $_SESSION['mail'], PDO::PARAM_STR);
+    $stmtEmpruntsEnCours->execute();
+    $resultatEmpruntsEnCours = $stmtEmpruntsEnCours->fetch(PDO::FETCH_ASSOC);
 
-                // Exécuter la requête uniquement si le panier contient des livres
-                $stmt = $connexion->prepare("SELECT nolivre, titre, anneeparution FROM livre WHERE nolivre IN ($placeholders)");
-                $stmt->execute($_SESSION['panier']); // Utiliser les ID du panier comme paramètres
 
-                $livres = $stmt->fetchAll(PDO::FETCH_OBJ);
+    echo "<p>Vous pouvez encore emprunter " . (5 - $empruntsEnCours) . " livre(s).</p>";
 
-                if ($livres): ?>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Titre</th>
-                                <th>Année de Parution</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($livres as $livre): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($livre->titre) ?></td>
-                                <td><?= htmlspecialchars($livre->anneeparution) ?></td>
-                                <td>
-                                    <form method="post">
-                                        <input type="hidden" name="article_id" value="<?= $livre->nolivre ?>">
-                                        <button type="submit" name="supprimer_du_panier" class="btn btn-danger btn-sm">Supprimer</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php
-                else:
-                    echo '<div class="alert alert-warning">Aucun livre trouvé dans la base de données.</div>';
-                endif;
-            } else {
-                echo '<div class="alert alert-info">Votre panier est vide.</div>';
+    //  si le panier contient des livres
+    if (isset($_SESSION['panier']) && !empty($_SESSION['panier'])) {
+        echo "<ul class='list-group'>";
+        foreach ($_SESSION['panier'] as $nolivre) {
+            // Récupération des informations sur le livre et de l'auteur 
+            $sqlLivre = "
+                SELECT livre.titre, auteur.nom, auteur.prenom 
+                FROM livre
+                JOIN auteur ON livre.noauteur = auteur.noauteur
+                WHERE livre.nolivre = :nolivre
+            ";
+            $stmtLivre = $connexion->prepare($sqlLivre);
+            $stmtLivre->bindParam(':nolivre', $nolivre, PDO::PARAM_STR);
+            $stmtLivre->execute();
+            $livre = $stmtLivre->fetch(PDO::FETCH_ASSOC);
+
+            if ($livre) {
+                // Affichage des informations de l'auteur et du titre du livre
+                $auteur = ($livre['prenom']) . " " . ($livre['nom']);
+            
+                echo "<li class='list-group-item d-flex justify-content-between align-items-center'>";
+                echo $auteur . " - " . ($livre['titre']);
+                echo "<a href='panier.php?annuler=" . ($nolivre) . "' class='btn btn-danger btn-sm'>Annuler</a>";
+                echo "</li>";
             }
+            
+        }
+        echo "</ul>";
+    } else {
+        echo "<p>Votre panier est vide.</p>";
+    }
 
-            // Suppression d'un livre du panier
-            if (isset($_POST['supprimer_du_panier'])) {
-                $article_id = $_POST['article_id'];
-                if (($key = array_search($article_id, $_SESSION['panier'])) !== false) {
-                    unset($_SESSION['panier'][$key]);
-                    $_SESSION['panier'] = array_values($_SESSION['panier']); // Réindexer le tableau
-                    echo '<div class="alert alert-success mt-3">Livre supprimé du panier.</div>';
-                }
-                header('Location: panier.php');
-    exit;
-            }
-            ?>
-        </div>
-    </div>
-    <!-- Colonne de droite (col-sm-3) -->
-    <div class="col-sm-3 order-sm-2">
+    //valider panier
+    echo "<div class='mt-3'>";
+    echo "<a href='panier.php?valider=true' class='btn btn-success'>Valider le panier</a>";
+    echo "</div>";
+} else {
+    echo "<p class='text-danger'>Connecter vous pour voir votre panier.</p>";
+}   ?>
+</div>
+
+    <!-- Colonne de droite -->
+    <div class="col-sm-3">
             <img src="librairie.png" width="300px" height="350px" class="mb-3">
             <?php include('authentification.php'); ?> <!-- Inclure pour la connexion -->
         </div>
-</div>
+
 </body>
 </html>

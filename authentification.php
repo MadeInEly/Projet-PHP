@@ -17,14 +17,14 @@ if (isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin') {
 
 // Si l'utilisateur est connecté
 if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
-    echo '<h2><strong>' . htmlspecialchars($_SESSION['prenom']) . ' ' . htmlspecialchars($_SESSION['nom']) . '</strong></h2>';
+    echo '<h2><strong>' . $_SESSION['prenom'] . ' ' . $_SESSION['nom'] . '</strong></h2>';
     echo '<ul>';
-    echo '<li>Adresse email : ' . htmlspecialchars($_SESSION['mel']) . '</li>';
-    echo '<li>Adresse : ' . htmlspecialchars($_SESSION['adresse']) . '</li>';
-    echo '<li>Ville : ' . htmlspecialchars($_SESSION['ville']) . '</li>';
-    echo '<li>Code postal : ' . htmlspecialchars($_SESSION['codepostal']) . '</li>';
+    echo '<li>Adresse email : ' . $_SESSION['mel'] . '</li>';
+    echo '<li>Adresse : ' . $_SESSION['adresse'] . '</li>';
+    echo '<li>Ville : ' . $_SESSION['ville'] . '</li>';
+    echo '<li>Code postal : ' . $_SESSION['codepostal'] . '</li>';
     echo '</ul>';
-    echo '<form action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" method="post">
+    echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">
             <input type="submit" name="btnSeDeconnecter" value="Se déconnecter">
           </form>';
 } else {
@@ -64,7 +64,7 @@ if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
                     echo '<div style="color: red;">Identifiant ou mot de passe incorrect.</div>';
                 }
             } catch (PDOException $e) {
-                echo '<div style="color: red;">Erreur : ' . htmlspecialchars($e->getMessage()) . '</div>';
+                echo '<div style="color: red;">Erreur : ' . $e->getMessage() . '</div>';
             }
         } else {
             echo '<div style="color: red;">Veuillez remplir tous les champs.</div>';
@@ -73,7 +73,7 @@ if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) {
 
     // Affichage du formulaire de connexion
     echo '
-    <form action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '" method="post">
+    <form action="' . $_SERVER['PHP_SELF'] . '" method="post">
         <label for="mel" Identifiant :</label>
         <input name="mel" id="mel" type="text" size="30"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"required>  *  <br>
         <label for="mot_de_passe">Mot de passe :</label>
